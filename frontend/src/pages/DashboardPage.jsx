@@ -63,103 +63,226 @@ const DashboardPage = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <p className="mt-1 text-gray-600">
-            Welcome, <span className="font-semibold">{user?.name || user?.email}</span>!
-          </p>
-        </div>
+  // Calculate positions for cards in circular path
+  const getCardPosition = (index, total) => {
+    const radius = 150; // Radius for circular path arrangement
+    const angle = (index * 360) / total - 90; // Start from top
+    const radian = (angle * Math.PI) / 180;
+    const x = Math.cos(radian) * radius;
+    const y = Math.sin(radian) * radius;
+    return { x, y };
+  };
 
-        <div className="mb-6">
-          <button
-            onClick={() => setIsCreateModalOpen(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            + Create New Group
-          </button>
-        </div>
+  const summaryCards = [
+    {
+      title: 'Total Spent',
+      value: summary.totalSpent,
+      color: 'blue',
+      icon: (
+        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9.75m0 0h-.75m.75 0h.75m0 0h8.25m-8.25 0v-.375c0-.621.504-1.125 1.125-1.125h9.75c.621 0 1.125.504 1.125 1.125v9.75m-12 0v-.375c0-.621.504-1.125 1.125-1.125h9.75c.621 0 1.125.504 1.125 1.125v9.75" />
+        </svg>
+      ),
+    },
+    {
+      title: 'Owed to You',
+      value: summary.totalOwedToUser,
+      color: 'green',
+      icon: (
+        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+    },
+    {
+      title: 'You Owe',
+      value: summary.totalUserOwes,
+      color: 'red',
+      icon: (
+        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+        </svg>
+      ),
+    },
+  ];
+
+  return (
+    <div className="min-h-screen" style={{ 
+      background: 'linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%)',
+      fontFamily: 'Inter, sans-serif'
+    }}>
+      <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
 
         {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
             {error}
           </div>
         )}
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <SummaryCard
-            title="Total Spent"
-            value={summary.totalSpent}
-            color="blue"
-            icon={
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-            }
-          />
-          <SummaryCard
-            title="Total Owed to You"
-            value={summary.totalOwedToUser}
-            color="green"
-            icon={
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            }
-          />
-          <SummaryCard
-            title="You Owe"
-            value={summary.totalUserOwes}
-            color="red"
-            icon={
-              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            }
-          />
-        </div>
+        {/* Main Layout: Split on desktop */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Side: Dashboard heading + Groups */}
+          <div className="lg:col-span-2">
+            {/* Dashboard Header */}
+            <div className="mb-6">
+              <h1 className="text-4xl font-bold text-gray-800 mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                Dashboard
+              </h1>
+              <p className="text-gray-600 text-lg">
+                Welcome back, <span className="font-semibold text-gray-800">{user?.name || user?.email}</span>!
+              </p>
+            </div>
+            
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-semibold text-gray-800">Your Groups</h2>
+              <button
+                onClick={() => setIsCreateModalOpen(true)}
+                className="px-5 py-2.5 rounded-full text-white font-medium transition-all duration-300"
+                style={{
+                  background: 'linear-gradient(135deg, #7EC8F8 0%, #5BA3D1 100%)',
+                  boxShadow: '0 4px 15px rgba(126, 200, 248, 0.4)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(126, 200, 248, 0.6)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(126, 200, 248, 0.4)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                + Create Group
+              </button>
+            </div>
 
-        {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
-            <p className="ml-3 text-gray-600">Loading groups...</p>
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                <p className="ml-3 text-gray-600">Loading groups...</p>
+              </div>
+            ) : groups.length === 0 ? (
+              <div className="soft-blob-gray p-12 text-center">
+                <svg
+                  className="mx-auto h-16 w-16 text-gray-400 mb-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+                <h3 className="mt-2 text-lg font-semibold text-gray-800">No groups yet</h3>
+                <p className="mt-2 text-gray-600 mb-6">
+                  Get started by creating your first expense group.
+                </p>
+                <button
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="px-6 py-3 rounded-full text-white font-medium transition-all duration-300"
+                  style={{
+                    background: 'linear-gradient(135deg, #7EC8F8 0%, #5BA3D1 100%)',
+                    boxShadow: '0 4px 15px rgba(126, 200, 248, 0.4)',
+                  }}
+                >
+                  Create Your First Group
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {groups.map((group) => (
+                  <GroupCard key={group._id} group={group} />
+                ))}
+              </div>
+            )}
           </div>
-        ) : groups.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <svg
-              className="mx-auto h-12 w-12 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No groups yet</h3>
-            <p className="mt-1 text-sm text-gray-500 mb-4">
-              Get started by creating your first expense group.
-            </p>
-            <button
-              onClick={() => setIsCreateModalOpen(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Create Your First Group
-            </button>
+
+          {/* Right Side: Summary Cards in Circular Layout */}
+          <div className="lg:col-span-1">
+            <div className="lg:sticky lg:top-8" style={{ position: 'relative', zIndex: 1 }}>
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6">Summary</h2>
+              {summaryLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                </div>
+              ) : (
+                <div className="relative mx-auto" style={{ width: '100%', maxWidth: '450px', height: '450px', overflow: 'visible' }}>
+                  {/* Soft Blob Container - wraps everything in blob shape */}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
+                      background: 'linear-gradient(145deg, #ffffff, #f0f0f0)',
+                      boxShadow: '20px 20px 60px #d0d0d0, -20px -20px 60px #ffffff',
+                      border: '2px solid rgba(255, 255, 255, 0.5)',
+                      overflow: 'visible',
+                    }}
+                  >
+                    {/* Unfilled Circle Outline - visual guide showing circular path */}
+                    <svg
+                      className="absolute pointer-events-none"
+                      style={{
+                        left: '50%',
+                        top: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '360px',
+                        height: '360px',
+                      }}
+                    >
+                      <circle
+                        cx="180"
+                        cy="180"
+                        r="160"
+                        fill="none"
+                        stroke="#7EC8F8"
+                        strokeWidth="2"
+                        strokeDasharray="5,5"
+                        opacity="0.3"
+                      />
+                    </svg>
+
+                    {/* Cards arranged in circular path inside blob */}
+                    <div
+                      className="absolute"
+                      style={{
+                        left: '50%',
+                        top: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '360px',
+                        height: '360px',
+                      }}
+                    >
+                      {summaryCards.map((card, index) => {
+                        const position = getCardPosition(index, summaryCards.length);
+                        return (
+                          <div
+                            key={index}
+                            className="absolute"
+                            style={{
+                              left: `calc(50% + ${position.x}px)`,
+                              top: `calc(50% + ${position.y}px)`,
+                              transform: 'translate(-50%, -50%)',
+                              zIndex: 10,
+                            }}
+                          >
+                            <SummaryCard
+                              title={card.title}
+                              value={card.value}
+                              color={card.color}
+                              icon={card.icon}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {groups.map((group) => (
-              <GroupCard key={group._id} group={group} />
-            ))}
-          </div>
-        )}
+        </div>
 
         <CreateGroupModal
           isOpen={isCreateModalOpen}
