@@ -37,12 +37,7 @@ VITE_BACKPATH=https://splitapp-e25v.onrender.com/api
 
 ### Build Command:
 ```
-npm install && npm run build
-```
-
-### Start Command:
-```
-npm run preview
+yarn build
 ```
 
 ### Root Directory:
