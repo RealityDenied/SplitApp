@@ -117,36 +117,31 @@ const GroupCard = ({ group }) => {
         Created {new Date(group.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
       </p>
       
-      {/* Full-height arrow button on right - transition divider */}
+      {/* Full-height arrow button on right - no background, arrow matches card height */}
       <button
         onClick={(e) => {
           e.stopPropagation();
           handleClick();
         }}
-        className="absolute right-0 top-0 bottom-0 w-16 flex items-center justify-center transition-all duration-200 z-10"
-        style={{
-          background: 'linear-gradient(180deg, #d1d5db 0%, #9ca3af 50%, #6b7280 100%)',
-          borderRadius: `0 ${borderRadius}px ${borderRadius}px 0`,
-          borderLeft: '2px solid rgba(134, 140, 143, 0.5)',
-          boxShadow: 'inset 2px 0 8px rgba(134, 140, 143, 0.2)',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.background = 'linear-gradient(180deg, #9ca3af 0%, #6b7280 50%, #4b5563 100%)';
-          e.currentTarget.style.boxShadow = 'inset 2px 0 12px rgba(134, 140, 143, 0.3)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.background = 'linear-gradient(180deg, #d1d5db 0%, #9ca3af 50%, #6b7280 100%)';
-          e.currentTarget.style.boxShadow = 'inset 2px 0 8px rgba(134, 140, 143, 0.2)';
-        }}
+        className="absolute right-0 top-0 bottom-0 w-20 flex items-center justify-center transition-all duration-200 z-10 bg-transparent"
       >
         <svg 
-          className="text-gray-700" 
+          className="text-gray-600" 
           fill="none" 
           stroke="currentColor" 
-          viewBox="0 0 24 24"
-          style={{ width: `${cardHeight * 0.4}px`, height: `${cardHeight * 0.4}px` }}
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          style={{ 
+            width: `${cardHeight * 0.6}px`, 
+            height: `${cardHeight * 0.6}px`
+          }}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+          <path 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            strokeWidth="16"
+            d="M25 20 L75 50 L25 80" 
+          />
         </svg>
       </button>
     </div>
