@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+// Use VITE_BACKPATH for production, fallback to /api for same-origin
+const API_URL = import.meta.env.VITE_BACKPATH || '/api';
 
 const api = axios.create({
   baseURL: API_URL,

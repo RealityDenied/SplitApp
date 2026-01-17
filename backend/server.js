@@ -1,8 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import connectDB from './config/database.js';
 import authRoutes from './routes/auth.js';
 import groupRoutes from './routes/groups.js';
@@ -15,10 +13,6 @@ dotenv.config();
 connectDB();
 
 const app = express();
-
-// Get __dirname equivalent in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // CORS configuration
 const corsOptions = {
@@ -42,30 +36,6 @@ app.use('/api/dashboard', dashboardRoutes);
 app.get('/api/health', (req, res) => {
   res.json({ message: 'Server is running' });
 });
-
-// Serve static files from the React app in production
-if (process.env.NODE_ENV === 'production') {
-  const frontendPath = path.join(__dirname, '../frontend/dist');
-  
-  // Check if frontend build exists
-  try {
-    app.use(express.static(frontendPath));
-
-    // Send all non-API requests to React app
-    app.get('*', (req, res) => {
-      if (!req.path.startsWith('/api')) {
-        res.sendFile(path.join(frontendPath, 'index.html'), (err) => {
-          if (err) {
-            console.error('Error serving frontend:', err);
-            res.status(500).json({ message: 'Frontend not found. Please build the frontend.' });
-          }
-        });
-      }
-    });
-  } catch (error) {
-    console.warn('Frontend build not found. API will still work.');
-  }
-}
 
 const PORT = process.env.PORT || 5000;
 

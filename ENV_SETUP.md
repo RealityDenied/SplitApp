@@ -25,13 +25,25 @@ FRONTEND_URL=https://your-app-name.onrender.com
 
 Create a `.env` file in the `frontend` directory if you need to override the API URL:
 
+**For Production (separate frontend deployment):**
 ```env
-VITE_API_URL=/api
+VITE_API_URL=https://splitapp-e25v.onrender.com/api
 ```
 
-For development with separate backend:
+**Or use VITE_BACKPATH:**
+```env
+VITE_BACKPATH=https://splitapp-e25v.onrender.com/api
+```
+
+**For Development (separate backend):**
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
-**Note:** In production, the frontend uses `/api` by default, which works when served from the same domain as the backend.
+**For Same-Origin (backend serves frontend):**
+```env
+VITE_API_URL=/api
+```
+(or leave empty - defaults to `/api`)
+
+**Important:** In Vite, environment variables must be prefixed with `VITE_` to be exposed to the client-side code.
