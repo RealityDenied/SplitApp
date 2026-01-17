@@ -133,6 +133,25 @@ SplitMint/
 2. **Custom Amount** - Specify exact amount per participant
 3. **Percentage** - Split by percentage (must sum to 100%)
 
+## Deployment
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions to Render.
+
+Quick setup:
+1. Set up MongoDB Atlas
+2. Create a Render Web Service
+3. Set environment variables (see [ENV_SETUP.md](./ENV_SETUP.md))
+4. Deploy!
+
+The app is configured to:
+- Build frontend automatically during deployment
+- Serve both backend API and frontend from the same domain
+- Handle routing for React Router
+
+## Environment Variables
+
+See [ENV_SETUP.md](./ENV_SETUP.md) for environment variable configuration.
+
 ## License
 
 MIT
