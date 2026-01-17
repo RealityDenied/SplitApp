@@ -32,9 +32,9 @@ body {
 
 .soft-blob-gray {
   border-radius: 40px;
-  background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+  background: linear-gradient(145deg, #e5e7eb, #d1d5db);
   box-shadow: 
-    15px 15px 40px #d0d1d2,
+    15px 15px 40px #868C8F,
     -15px -15px 40px #ffffff,
     inset 0 0 0 rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
@@ -42,10 +42,9 @@ body {
 
 .soft-blob-gray:hover {
   box-shadow: 
-    20px 20px 50px #c0c1c2,
-    -20px -20px 50px #ffffff,
+    18px 18px 45px #868C8F,
+    -18px -18px 45px #ffffff,
     inset 0 0 0 rgba(255, 255, 255, 0.4);
-  transform: translateY(-3px) scale(1.01);
 }
 
 /* Circular card positioning */

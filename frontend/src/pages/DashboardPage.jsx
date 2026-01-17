@@ -108,7 +108,7 @@ const DashboardPage = () => {
 
   return (
     <div className="min-h-screen" style={{ 
-      background: 'linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%)',
+      background: 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
       fontFamily: 'Inter, sans-serif'
     }}>
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -120,9 +120,9 @@ const DashboardPage = () => {
         )}
 
         {/* Main Layout: Split on desktop */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           {/* Left Side: Dashboard heading + Groups */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             {/* Dashboard Header */}
             <div className="mb-6">
               <h1 className="text-4xl font-bold text-gray-800 mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
@@ -137,18 +137,11 @@ const DashboardPage = () => {
               <h2 className="text-2xl font-semibold text-gray-800">Your Groups</h2>
               <button
                 onClick={() => setIsCreateModalOpen(true)}
-                className="px-5 py-2.5 rounded-full text-white font-medium transition-all duration-300"
+                className="px-5 py-2.5 text-white font-medium transition-all duration-300"
                 style={{
-                  background: 'linear-gradient(135deg, #7EC8F8 0%, #5BA3D1 100%)',
-                  boxShadow: '0 4px 15px rgba(126, 200, 248, 0.4)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(126, 200, 248, 0.6)';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '0 4px 15px rgba(126, 200, 248, 0.4)';
-                  e.currentTarget.style.transform = 'translateY(0)';
+                  background: '#1f2937',
+                  borderRadius: '8px',
+                  boxShadow: 'none',
                 }}
               >
                 + Create Group
@@ -181,17 +174,18 @@ const DashboardPage = () => {
                 </p>
                 <button
                   onClick={() => setIsCreateModalOpen(true)}
-                  className="px-6 py-3 rounded-full text-white font-medium transition-all duration-300"
+                  className="px-6 py-3 text-white font-medium transition-all duration-300"
                   style={{
-                    background: 'linear-gradient(135deg, #7EC8F8 0%, #5BA3D1 100%)',
-                    boxShadow: '0 4px 15px rgba(126, 200, 248, 0.4)',
+                    background: '#1f2937',
+                    borderRadius: '8px',
+                    boxShadow: 'none',
                   }}
                 >
                   Create Your First Group
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-wrap gap-6">
                 {groups.map((group) => (
                   <GroupCard key={group._id} group={group} />
                 ))}
@@ -199,11 +193,10 @@ const DashboardPage = () => {
             )}
           </div>
 
-          {/* Right Side: Summary Cards in Circular Layout */}
-          <div className="lg:col-span-1">
-            <div className="lg:sticky lg:top-8" style={{ position: 'relative', zIndex: 1 }}>
-              <h2 className="text-2xl font-semibold text-gray-800 mb-6">Summary</h2>
-              {summaryLoading ? (
+           {/* Right Side: Summary Cards in Circular Layout */}
+           <div className="lg:col-span-2">
+             <div className="lg:sticky lg:top-8" style={{ position: 'relative', zIndex: 1 }}>
+               {summaryLoading ? (
                 <div className="flex items-center justify-center py-12">
                   <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
                 </div>
@@ -214,9 +207,9 @@ const DashboardPage = () => {
                     className="absolute inset-0"
                     style={{
                       borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%',
-                      background: 'linear-gradient(145deg, #ffffff, #f0f0f0)',
-                      boxShadow: '20px 20px 60px #d0d0d0, -20px -20px 60px #ffffff',
-                      border: '2px solid rgba(255, 255, 255, 0.5)',
+                      background: 'linear-gradient(145deg, #e5e7eb, #d1d5db)',
+                      boxShadow: '20px 20px 60px #868C8F, -20px -20px 60px #ffffff, inset 0 0 0 rgba(255, 255, 255, 0.3)',
+                      border: '2px solid rgba(134, 140, 143, 0.3)',
                       overflow: 'visible',
                     }}
                   >
@@ -236,10 +229,10 @@ const DashboardPage = () => {
                         cy="180"
                         r="160"
                         fill="none"
-                        stroke="#7EC8F8"
+                        stroke="#868C8F"
                         strokeWidth="2"
                         strokeDasharray="5,5"
-                        opacity="0.3"
+                        opacity="0.5"
                       />
                     </svg>
 
