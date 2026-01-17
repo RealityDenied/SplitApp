@@ -20,7 +20,7 @@ export const register = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password, name } = req.body;
+    const { email, password, name, avatarSeed } = req.body;
 
     // Check if user already exists
     const userExists = await User.findOne({ email });
@@ -28,11 +28,15 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
+    // Generate avatar seed if not provided (use email as seed for consistency)
+    const finalAvatarSeed = avatarSeed || email;
+
     // Create user
     const user = await User.create({
       email,
       password,
       name: name || email.split('@')[0], // Use email prefix if no name provided
+      avatarSeed: finalAvatarSeed,
     });
 
     if (user) {
@@ -40,6 +44,7 @@ export const register = async (req, res) => {
         _id: user._id,
         email: user.email,
         name: user.name,
+        avatarSeed: user.avatarSeed,
         token: generateToken(user._id),
       });
     } else {
@@ -72,6 +77,7 @@ export const login = async (req, res) => {
         _id: user._id,
         email: user.email,
         name: user.name,
+        avatarSeed: user.avatarSeed,
         token: generateToken(user._id),
       });
     } else {

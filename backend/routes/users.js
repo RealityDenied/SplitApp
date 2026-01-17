@@ -1,6 +1,7 @@
 import express from 'express';
-import { searchUsers } from '../controllers/userController.js';
+import { searchUsers, updateAvatar } from '../controllers/userController.js';
 import { protect } from '../middleware/auth.js';
+import { body } from 'express-validator';
 
 const router = express.Router();
 
@@ -8,5 +9,11 @@ const router = express.Router();
 router.use(protect);
 
 router.get('/', searchUsers);
+
+router.put(
+  '/avatar',
+  [body('avatarSeed').trim().notEmpty().withMessage('Avatar seed is required')],
+  updateAvatar
+);
 
 export default router;

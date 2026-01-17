@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Avatar from './Avatar';
 
 const ExpenseItem = ({ expense, onEdit, onDelete, currentUserId }) => {
   const [showDetails, setShowDetails] = useState(false);
@@ -44,8 +45,13 @@ const ExpenseItem = ({ expense, onEdit, onDelete, currentUserId }) => {
           </div>
 
           <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
-            <span>
-              <span className="font-medium">Paid by:</span>{' '}
+            <span className="flex items-center space-x-2">
+              <span className="font-medium">Paid by:</span>
+              <Avatar
+                seed={expense.payer.avatarSeed || expense.payer.email}
+                name={expense.payer.name || expense.payer.email}
+                size="xs"
+              />
               <span className={isCurrentUserPayer ? 'font-semibold text-blue-600' : ''}>
                 {expense.payer.name || expense.payer.email || 'Unknown'}
               </span>

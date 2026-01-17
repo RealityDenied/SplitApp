@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import AvatarSelector from '../components/AvatarSelector';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -8,6 +9,7 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const [isRegister, setIsRegister] = useState(false);
   const [name, setName] = useState('');
+  const [avatarSeed, setAvatarSeed] = useState('');
   const { login, register } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -16,7 +18,7 @@ const LoginPage = () => {
     setError('');
 
     if (isRegister) {
-      const result = await register(email, password, name);
+      const result = await register(email, password, name, avatarSeed || email);
       if (result.success) {
         navigate('/dashboard');
       } else {
@@ -47,6 +49,7 @@ const LoginPage = () => {
                   onClick={() => {
                     setIsRegister(false);
                     setError('');
+                    setAvatarSeed('');
                   }}
                   className="font-medium text-blue-600 hover:text-blue-500"
                 >
@@ -60,6 +63,7 @@ const LoginPage = () => {
                   onClick={() => {
                     setIsRegister(true);
                     setError('');
+                    setAvatarSeed(email || '');
                   }}
                   className="font-medium text-blue-600 hover:text-blue-500"
                 >
@@ -127,6 +131,16 @@ const LoginPage = () => {
               />
             </div>
           </div>
+
+          {isRegister && (
+            <div className="mt-4">
+              <AvatarSelector
+                currentSeed={avatarSeed || email}
+                onSelect={setAvatarSeed}
+                label="Choose Your Avatar"
+              />
+            </div>
+          )}
 
           <div>
             <button

@@ -8,6 +8,7 @@ import ExpenseForm from '../components/ExpenseForm';
 import ExpenseList from '../components/ExpenseList';
 import BalanceSummary from '../components/BalanceSummary';
 import ExpenseFilters from '../components/ExpenseFilters';
+import Avatar from '../components/Avatar';
 
 const GroupDetailPage = () => {
   const { id } = useParams();
@@ -377,12 +378,11 @@ const GroupDetailPage = () => {
             {/* Creator */}
             <div className="mb-2 p-3 bg-gray-50 rounded-md flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-medium"
-                  style={{ backgroundColor: '#3B82F6' }}
-                >
-                  {(group.creator?.name || group.creator?.email || '?').charAt(0).toUpperCase()}
-                </div>
+                <Avatar
+                  seed={group.creator?.avatarSeed || group.creator?.email}
+                  name={group.creator?.name || group.creator?.email}
+                  size="md"
+                />
                 <div>
                   <span className="font-medium text-gray-900">
                     {group.creator?.name || group.creator?.email}
@@ -407,17 +407,21 @@ const GroupDetailPage = () => {
                       className="p-3 bg-gray-50 rounded-md flex items-center justify-between"
                     >
                       <div className="flex items-center space-x-3">
-                        <div
-                          className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-medium"
-                          style={{
-                            backgroundColor: participant.color || '#3B82F6',
-                          }}
-                        >
-                          {(participant.name ||
+                        <Avatar
+                          seed={
+                            participant.user?.avatarSeed ||
+                            participant.user?.email ||
+                            participant.name ||
+                            'default'
+                          }
+                          name={
+                            participant.name ||
                             participant.user?.name ||
                             participant.user?.email ||
-                            '?').charAt(0).toUpperCase()}
-                        </div>
+                            'Unknown'
+                          }
+                          size="md"
+                        />
                         <span className="text-gray-700">
                           {participant.name ||
                             participant.user?.name ||

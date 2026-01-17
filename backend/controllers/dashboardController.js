@@ -25,8 +25,8 @@ export const getDashboardSummary = async (req, res) => {
     for (const group of groups) {
       // Get all expenses in this group
       const expenses = await Expense.find({ group: group._id })
-        .populate('payer', 'name email')
-        .populate('splits.participant', 'name email');
+        .populate('payer', 'name email avatarSeed')
+        .populate('splits.participant', 'name email avatarSeed');
 
       if (expenses.length === 0) continue;
 

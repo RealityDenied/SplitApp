@@ -56,9 +56,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (email, password, name) => {
+  const register = async (email, password, name, avatarSeed) => {
     try {
-      const response = await api.post('/auth/register', { email, password, name });
+      const response = await api.post('/auth/register', { email, password, name, avatarSeed });
       const { token: newToken, ...userData } = response.data;
       
       setToken(newToken);
@@ -75,6 +75,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = (userData) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+
   const logout = () => {
     setToken(null);
     setUser(null);
@@ -89,6 +94,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    updateUser,
     isAuthenticated: !!token,
   };
 

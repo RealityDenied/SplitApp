@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    avatarSeed: {
+      type: String,
+      default: null, // Will be generated if not provided
+    },
   },
   {
     timestamps: true,

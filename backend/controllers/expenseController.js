@@ -77,8 +77,8 @@ export const getExpenses = async (req, res) => {
 
     // Get expenses for the group
     const expenses = await Expense.find(query)
-      .populate('payer', 'name email')
-      .populate('splits.participant', 'name email')
+      .populate('payer', 'name email avatarSeed')
+      .populate('splits.participant', 'name email avatarSeed')
       .sort({ date: -1, createdAt: -1 });
 
     res.json(expenses);
@@ -210,8 +210,8 @@ export const createExpense = async (req, res) => {
     });
 
     const populatedExpense = await Expense.findById(expense._id)
-      .populate('payer', 'name email')
-      .populate('splits.participant', 'name email');
+      .populate('payer', 'name email avatarSeed')
+      .populate('splits.participant', 'name email avatarSeed');
 
     res.status(201).json(populatedExpense);
   } catch (error) {
@@ -306,8 +306,8 @@ export const updateExpense = async (req, res) => {
     const updatedExpense = await expense.save();
 
     const populatedExpense = await Expense.findById(updatedExpense._id)
-      .populate('payer', 'name email')
-      .populate('splits.participant', 'name email');
+      .populate('payer', 'name email avatarSeed')
+      .populate('splits.participant', 'name email avatarSeed');
 
     res.json(populatedExpense);
   } catch (error) {

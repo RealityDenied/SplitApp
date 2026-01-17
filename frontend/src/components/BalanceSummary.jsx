@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import api from '../services/api';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import Avatar from './Avatar';
 
 const BalanceSummary = ({ groupId, refreshTrigger }) => {
   const { user } = useContext(AuthContext);
@@ -117,8 +118,17 @@ const BalanceSummary = ({ groupId, refreshTrigger }) => {
                     }
                   >
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                      {item.user.name || item.user.email}
-                      {isCurrentUser && <span className="ml-2 text-blue-600">(You)</span>}
+                      <div className="flex items-center space-x-2">
+                        <Avatar
+                          seed={item.user.avatarSeed || item.user.email}
+                          name={item.user.name || item.user.email}
+                          size="sm"
+                        />
+                        <span>
+                          {item.user.name || item.user.email}
+                          {isCurrentUser && <span className="ml-2 text-blue-600">(You)</span>}
+                        </span>
+                      </div>
                     </td>
                     <td
                       className={`px-4 py-3 whitespace-nowrap text-sm text-right font-medium ${
@@ -169,12 +179,30 @@ const BalanceSummary = ({ groupId, refreshTrigger }) => {
                   return (
                     <tr key={index}>
                       <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        {item.from.name || item.from.email}
-                        {isFromCurrentUser && <span className="ml-2 text-red-600 font-medium">(You)</span>}
+                        <div className="flex items-center space-x-2">
+                          <Avatar
+                            seed={item.from.avatarSeed || item.from.email}
+                            name={item.from.name || item.from.email}
+                            size="sm"
+                          />
+                          <span>
+                            {item.from.name || item.from.email}
+                            {isFromCurrentUser && <span className="ml-2 text-red-600 font-medium">(You)</span>}
+                          </span>
+                        </div>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        {item.to.name || item.to.email}
-                        {isToCurrentUser && <span className="ml-2 text-green-600 font-medium">(You)</span>}
+                        <div className="flex items-center space-x-2">
+                          <Avatar
+                            seed={item.to.avatarSeed || item.to.email}
+                            name={item.to.name || item.to.email}
+                            size="sm"
+                          />
+                          <span>
+                            {item.to.name || item.to.email}
+                            {isToCurrentUser && <span className="ml-2 text-green-600 font-medium">(You)</span>}
+                          </span>
+                        </div>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap text-sm text-right font-medium text-gray-900">
                         {formatCurrency(item.amount)}
@@ -208,21 +236,33 @@ const BalanceSummary = ({ groupId, refreshTrigger }) => {
                     key={index}
                     className="bg-white rounded-md p-3 border border-green-300"
                   >
-                    <p className="text-sm font-medium text-gray-900">
-                      <span className={isFromCurrentUser ? 'text-red-600 font-semibold' : ''}>
-                        {settlement.from.name || settlement.from.email}
-                        {isFromCurrentUser && ' (You)'}
-                      </span>
-                      {' should pay '}
-                      <span className="font-bold text-green-600">
-                        {formatCurrency(settlement.amount)}
-                      </span>
-                      {' to '}
-                      <span className={isToCurrentUser ? 'text-green-600 font-semibold' : ''}>
+                    <div className="flex items-center space-x-2">
+                      <Avatar
+                        seed={settlement.from.avatarSeed || settlement.from.email}
+                        name={settlement.from.name || settlement.from.email}
+                        size="sm"
+                      />
+                      <p className="text-sm font-medium text-gray-900 flex-1">
+                        <span className={isFromCurrentUser ? 'text-red-600 font-semibold' : ''}>
+                          {settlement.from.name || settlement.from.email}
+                          {isFromCurrentUser && ' (You)'}
+                        </span>
+                        {' should pay '}
+                        <span className="font-bold text-green-600">
+                          {formatCurrency(settlement.amount)}
+                        </span>
+                        {' to '}
+                      </p>
+                      <Avatar
+                        seed={settlement.to.avatarSeed || settlement.to.email}
+                        name={settlement.to.name || settlement.to.email}
+                        size="sm"
+                      />
+                      <span className={isToCurrentUser ? 'text-green-600 font-semibold' : 'text-sm font-medium text-gray-900'}>
                         {settlement.to.name || settlement.to.email}
                         {isToCurrentUser && ' (You)'}
                       </span>
-                    </p>
+                    </div>
                   </div>
                 );
               })}

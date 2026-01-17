@@ -12,8 +12,8 @@ export const getGroupBalances = async (req, res) => {
 
     // Get group and verify access
     const group = await Group.findById(id)
-      .populate('creator', 'name email')
-      .populate('participants.user', 'name email');
+      .populate('creator', 'name email avatarSeed')
+      .populate('participants.user', 'name email avatarSeed');
 
     if (!group) {
       return res.status(404).json({ message: 'Group not found' });
@@ -42,6 +42,7 @@ export const getGroupBalances = async (req, res) => {
         _id: creatorId,
         name: group.creator.name,
         email: group.creator.email,
+        avatarSeed: group.creator.avatarSeed,
       };
     }
     if (group.participants) {

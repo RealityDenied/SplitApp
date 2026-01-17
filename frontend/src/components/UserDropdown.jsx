@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
+import Avatar from './Avatar';
 
 const UserDropdown = ({ onSelectUser, excludeUserIds = [], placeholder = 'Search users...' }) => {
   const [users, setUsers] = useState([]);
@@ -99,9 +100,11 @@ const UserDropdown = ({ onSelectUser, excludeUserIds = [], placeholder = 'Search
                   onClick={() => handleSelectUser(user)}
                   className="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center space-x-2"
                 >
-                  <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-medium">
-                    {(user.name || user.email).charAt(0).toUpperCase()}
-                  </div>
+                  <Avatar
+                    seed={user.avatarSeed || user.email}
+                    name={user.name || user.email}
+                    size="sm"
+                  />
                   <div>
                     <div className="font-medium text-gray-900">
                       {user.name || user.email.split('@')[0]}

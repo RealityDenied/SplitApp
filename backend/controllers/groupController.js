@@ -16,8 +16,8 @@ export const getGroups = async (req, res) => {
         { 'participants.user': userId }
       ]
     })
-      .populate('creator', 'name email')
-      .populate('participants.user', 'name email')
+      .populate('creator', 'name email avatarSeed')
+      .populate('participants.user', 'name email avatarSeed')
       .sort({ updatedAt: -1 });
 
     res.json(groups);
@@ -33,8 +33,8 @@ export const getGroups = async (req, res) => {
 export const getGroup = async (req, res) => {
   try {
     const group = await Group.findById(req.params.id)
-      .populate('creator', 'name email')
-      .populate('participants.user', 'name email');
+      .populate('creator', 'name email avatarSeed')
+      .populate('participants.user', 'name email avatarSeed');
 
     if (!group) {
       return res.status(404).json({ message: 'Group not found' });
@@ -90,8 +90,8 @@ export const createGroup = async (req, res) => {
     });
 
     const populatedGroup = await Group.findById(group._id)
-      .populate('creator', 'name email')
-      .populate('participants.user', 'name email');
+      .populate('creator', 'name email avatarSeed')
+      .populate('participants.user', 'name email avatarSeed');
 
     res.status(201).json(populatedGroup);
   } catch (error) {
