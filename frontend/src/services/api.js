@@ -1,7 +1,14 @@
 import axios from 'axios';
 
-// Use VITE_BACKPATH for production, fallback to /api for same-origin
+// API URL configuration
+// In production on Render, set VITE_BACKPATH=https://splitapp-e25v.onrender.com/api
 const API_URL = import.meta.env.VITE_BACKPATH || '/api';
+
+// Debug: Log API URL in development (remove in production if needed)
+if (import.meta.env.DEV) {
+  console.log('API URL:', API_URL);
+  console.log('VITE_BACKPATH env:', import.meta.env.VITE_BACKPATH);
+}
 
 const api = axios.create({
   baseURL: API_URL,
