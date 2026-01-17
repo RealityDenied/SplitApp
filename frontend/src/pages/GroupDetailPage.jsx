@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
+import { Pencil, X, Plus, Info } from 'lucide-react';
 import { AuthContext } from '../context/AuthContext';
 import api from '../services/api';
 import UserDropdown from '../components/UserDropdown';
@@ -278,7 +279,19 @@ const GroupDetailPage = () => {
                 <div className="mt-3 flex space-x-2">
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+                    className="px-4 py-2 rounded-md text-sm font-medium transition-all duration-200"
+                    style={{
+                      background: 'linear-gradient(145deg, #d1d5db, #9ca3af)',
+                      boxShadow: '4px 4px 8px #868C8F, -4px -4px 8px #ffffff',
+                      color: '#1f2937',
+                      border: '1px solid rgba(134, 140, 143, 0.3)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.boxShadow = '5px 5px 10px #868C8F, -5px -5px 10px #ffffff';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.boxShadow = '4px 4px 8px #868C8F, -4px -4px 8px #ffffff';
+                    }}
                   >
                     Save
                   </button>
@@ -297,70 +310,86 @@ const GroupDetailPage = () => {
             ) : (
               <>
                 <h1 className="text-2xl font-bold text-gray-900">{group.name}</h1>
-                {isCreator && (
-                  <div className="flex space-x-2">
+                <div className="flex space-x-2 items-center">
+                  {/* Info Button */}
+                  <div className="relative inline-block group">
                     <button
-                      onClick={() => setIsEditMode(true)}
-                      className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+                      className="p-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                      title="Group Details"
                     >
-                      Edit
+                      <Info size={18} />
                     </button>
+                    
+                    {/* Hover Card */}
+                    <div className="absolute left-0 top-full mt-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                      <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-4 min-w-[200px]">
+                        <div className="space-y-2">
+                          <p className="text-sm text-gray-600">
+                            <span className="font-medium">Total Members:</span> {totalParticipants}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            <span className="font-medium">Created by:</span> {group.creator?.name || group.creator?.email}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            <span className="font-medium">Created:</span> {new Date(group.createdAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {isCreator && (
+                    <>
+                      <button
+                        onClick={() => setIsEditMode(true)}
+                        className="p-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                        title="Edit"
+                      >
+                        <Pencil size={18} />
+                      </button>
                     {!deleteConfirm ? (
                       <button
                         onClick={() => setDeleteConfirm(true)}
-                        className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm"
+                        className="p-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                        title="Delete"
                       >
-                        Delete
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                          <path d="M3 6h18"/>
+                          <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
                       </button>
                     ) : (
                       <div className="flex space-x-2">
                         <button
                           onClick={handleDeleteGroup}
-                          className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm"
+                          className="p-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                          title="Confirm Delete"
                         >
-                          Confirm Delete
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                            <path d="M3 6h18"/>
+                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                          </svg>
                         </button>
                         <button
                           onClick={() => setDeleteConfirm(false)}
-                          className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 text-sm"
+                          className="p-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                          title="Cancel"
                         >
-                          Cancel
+                          <X size={18} />
                         </button>
                       </div>
                     )}
-                  </div>
-                )}
+                    </>
+                  )}
+                </div>
               </>
             )}
           </div>
 
           <div className="border-t pt-4 mt-4">
-            <h2 className="text-lg font-semibold text-gray-900 mb-3">Group Details</h2>
-            <div className="space-y-2">
-              <p className="text-gray-600">
-                <span className="font-medium">Total Members:</span> {totalParticipants}
-              </p>
-              <p className="text-gray-600">
-                <span className="font-medium">Created by:</span> {group.creator?.name || group.creator?.email}
-              </p>
-              <p className="text-gray-600">
-                <span className="font-medium">Created:</span> {new Date(group.createdAt).toLocaleDateString()}
-              </p>
-            </div>
-          </div>
-
-          <div className="border-t pt-4 mt-4">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-lg font-semibold text-gray-900">Participants</h2>
-              {isCreator && canAddMoreParticipants && (
-                <button
-                  onClick={() => setShowAddParticipant(!showAddParticipant)}
-                  className="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm"
-                >
-                  {showAddParticipant ? 'Cancel' : '+ Add Participant'}
-                </button>
-              )}
-            </div>
+            <h2 className="text-lg font-semibold text-gray-900 mb-3">Participants</h2>
 
             {showAddParticipant && isCreator && canAddMoreParticipants && (
               <div className="mb-4 p-4 bg-gray-50 rounded-md">
@@ -372,41 +401,73 @@ const GroupDetailPage = () => {
                   excludeUserIds={excludeUserIds}
                   placeholder="Search users by email or name..."
                 />
+                <button
+                  onClick={() => setShowAddParticipant(false)}
+                  className="mt-3 px-3 py-1 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 text-sm"
+                >
+                  Cancel
+                </button>
               </div>
             )}
 
-            {/* Creator */}
-            <div className="mb-2 p-3 bg-gray-50 rounded-md flex items-center justify-between">
-              <div className="flex items-center space-x-3">
+            {/* Participants - Horizontal Cards */}
+            <div className="flex flex-wrap gap-4">
+              {/* Creator Card */}
+              <div
+                className="rounded-lg p-4 flex flex-col items-center justify-center relative"
+                style={{
+                  width: '200px',
+                  height: '124px',
+                  borderRadius: '10px',
+                  background: 'linear-gradient(145deg, #ffffff, #f9fafb)',
+                  boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
+                  border: '1px solid rgba(134, 140, 143, 0.15)'
+                }}
+              >
                 <Avatar
                   seed={group.creator?.avatarSeed || group.creator?.email}
                   name={group.creator?.name || group.creator?.email}
-                  size="md"
+                  size="lg"
                 />
-                <div>
-                  <span className="font-medium text-gray-900">
-                    {group.creator?.name || group.creator?.email}
-                  </span>
-                  <span className="ml-2 text-xs text-gray-500">(Creator)</span>
-                </div>
+                <p className="mt-2 text-sm font-medium text-gray-900 text-center truncate w-full">
+                  {group.creator?.name || group.creator?.email}
+                </p>
+                <span className="text-xs text-gray-500">(Creator)</span>
               </div>
-            </div>
 
-            {/* Participants */}
-            {group.participants && group.participants.length > 0 ? (
-              <div className="space-y-2">
-                {group.participants.map((participant, index) => {
-                  const participantId = participant.user._id
-                    ? participant.user._id.toString()
-                    : participant.user.toString();
-                  const isRemoving = removingParticipantId === participantId;
+              {/* Participant Cards */}
+              {group.participants && group.participants.length > 0 && (
+                <>
+                  {group.participants.map((participant, index) => {
+                    const participantId = participant.user._id
+                      ? participant.user._id.toString()
+                      : participant.user.toString();
+                    const isRemoving = removingParticipantId === participantId;
+                    const participantName =
+                      participant.name ||
+                      participant.user?.name ||
+                      participant.user?.email ||
+                      'Unknown';
 
-                  return (
-                    <div
-                      key={index}
-                      className="p-3 bg-gray-50 rounded-md flex items-center justify-between"
-                    >
-                      <div className="flex items-center space-x-3">
+                    return (
+                      <div
+                        key={index}
+                        className="rounded-lg p-4 flex flex-col items-center justify-center relative transition-all duration-200"
+                        style={{
+                          width: '200px',
+                          height: '124px',
+                          borderRadius: '10px',
+                          background: 'linear-gradient(145deg, #ffffff, #f9fafb)',
+                          boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
+                          border: '1px solid rgba(134, 140, 143, 0.15)'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.boxShadow = '10px 10px 20px #d1d5db, -10px -10px 20px #ffffff';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.boxShadow = '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff';
+                        }}
+                      >
                         <Avatar
                           seed={
                             participant.user?.avatarSeed ||
@@ -414,56 +475,90 @@ const GroupDetailPage = () => {
                             participant.name ||
                             'default'
                           }
-                          name={
-                            participant.name ||
-                            participant.user?.name ||
-                            participant.user?.email ||
-                            'Unknown'
-                          }
-                          size="md"
+                          name={participantName}
+                          size="lg"
                         />
-                        <span className="text-gray-700">
-                          {participant.name ||
-                            participant.user?.name ||
-                            participant.user?.email ||
-                            'Unknown'}
-                        </span>
+                        <p className="mt-2 text-sm font-medium text-gray-900 text-center truncate w-full">
+                          {participantName}
+                        </p>
+                        {isCreator && (
+                          <button
+                            onClick={() => handleRemoveParticipant(participantId)}
+                            disabled={isRemoving}
+                            className="absolute top-2 right-2 p-1.5 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            title="Remove"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                              <path d="M3 6h18"/>
+                              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                          </button>
+                        )}
                       </div>
-                      {isCreator && (
-                        <button
-                          onClick={() => handleRemoveParticipant(participantId)}
-                          disabled={isRemoving}
-                          className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          {isRemoving ? 'Removing...' : 'Remove'}
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              !showAddParticipant && (
-                <p className="text-gray-500 text-sm">No participants added yet.</p>
-              )
-            )}
+                    );
+                  })}
+                </>
+              )}
 
-            {!canAddMoreParticipants && isCreator && (
-              <p className="mt-2 text-sm text-gray-500">
-                Maximum participants reached (3 + creator = 4 total)
-              </p>
-            )}
+              {/* Add Participant Button Card */}
+              {isCreator && canAddMoreParticipants && (
+                <button
+                  onClick={() => setShowAddParticipant(!showAddParticipant)}
+                  className="rounded-lg flex flex-col items-center justify-center transition-all duration-200"
+                  style={{
+                    width: '180px',
+                    height: '111px',
+                    borderRadius: '10px',
+                    background: 'linear-gradient(145deg, #e5e7eb, #d1d5db)',
+                    boxShadow: '6px 6px 12px #868C8F, -6px -6px 12px #ffffff',
+                    border: '2px dashed rgba(134, 140, 143, 0.4)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = '8px 8px 16px #868C8F, -8px -8px 16px #ffffff';
+                    e.currentTarget.style.borderColor = 'rgba(134, 140, 143, 0.6)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = '6px 6px 12px #868C8F, -6px -6px 12px #ffffff';
+                    e.currentTarget.style.borderColor = 'rgba(134, 140, 143, 0.4)';
+                  }}
+                  title="Add Participant"
+                >
+                  <Plus size={32} className="text-gray-500" strokeWidth={2.5} />
+                  <span className="mt-2 text-xs text-gray-600 font-medium">Add</span>
+                </button>
+              )}
+
+              {/* Empty State */}
+              {(!group.participants || group.participants.length === 0) && !isCreator && (
+                <p className="text-gray-500 text-sm">No participants added yet.</p>
+              )}
+
+              {!canAddMoreParticipants && isCreator && (
+                <p className="text-sm text-gray-500 flex items-center">
+                  Maximum participants reached (3 + creator = 4 total)
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Balance Summary Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div className="rounded-lg p-6 mb-6" style={{
+          background: 'linear-gradient(145deg, #f3f4f6, #e5e7eb)',
+          boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff',
+          border: '1px solid rgba(134, 140, 143, 0.2)'
+        }}>
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Balance Summary</h2>
           <BalanceSummary groupId={id} refreshTrigger={balanceRefreshTrigger} />
         </div>
 
         {/* Expenses Section */}
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="rounded-lg p-6" style={{
+          background: 'linear-gradient(145deg, #f3f4f6, #e5e7eb)',
+          boxShadow: '12px 12px 24px #d1d5db, -12px -12px 24px #ffffff',
+          border: '1px solid rgba(134, 140, 143, 0.2)'
+        }}>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-gray-900">Expenses</h2>
             <button
@@ -471,7 +566,7 @@ const GroupDetailPage = () => {
                 setEditingExpense(null);
                 setShowExpenseForm(!showExpenseForm);
               }}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 text-sm font-medium transition-colors"
             >
               {showExpenseForm ? 'Cancel' : '+ Add Expense'}
             </button>

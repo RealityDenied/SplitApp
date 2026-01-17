@@ -89,19 +89,23 @@ const BalanceSummary = ({ groupId, refreshTrigger }) => {
       {/* Net Balances Table */}
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-3">Net Balances</h3>
-        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+        <div className="rounded-lg overflow-hidden" style={{
+          background: 'linear-gradient(145deg, #f3f4f6, #e5e7eb)',
+          boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
+          border: '1px solid rgba(134, 140, 143, 0.2)'
+        }}>
+          <table className="min-w-full divide-y" style={{ borderColor: 'rgba(134, 140, 143, 0.2)' }}>
+            <thead style={{ background: 'linear-gradient(145deg, #e5e7eb, #d1d5db)' }}>
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                   Member
                 </th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-right text-xs font-medium text-gray-700 uppercase tracking-wider">
                   Balance
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y" style={{ borderColor: 'rgba(134, 140, 143, 0.2)' }}>
               {balanceData.netBalances.map((item, index) => {
                 const isCurrentUser = item.user._id === currentUserId;
                 const isPositive = item.balance > 0;
@@ -111,11 +115,8 @@ const BalanceSummary = ({ groupId, refreshTrigger }) => {
                 return (
                   <tr
                     key={index}
-                    className={
-                      isCurrentUser
-                        ? 'bg-blue-50 font-medium'
-                        : ''
-                    }
+                    className={isCurrentUser ? 'font-medium' : ''}
+                    style={isCurrentUser ? { background: 'linear-gradient(145deg, #f9fafb, #f3f4f6)' } : {}}
                   >
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                       <div className="flex items-center space-x-2">
@@ -152,66 +153,95 @@ const BalanceSummary = ({ groupId, refreshTrigger }) => {
         </div>
       </div>
 
-      {/* Who Owes Whom Table */}
+      {/* Who Owes Whom - Card Style with Arrow */}
       {balanceData.directionalBalances && balanceData.directionalBalances.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-3">Who Owes Whom</h3>
-          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    From
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    To
-                  </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Amount
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {balanceData.directionalBalances.map((item, index) => {
-                  const isFromCurrentUser = item.from._id === currentUserId;
-                  const isToCurrentUser = item.to._id === currentUserId;
+          <div className="space-y-3">
+            {balanceData.directionalBalances.map((item, index) => {
+              const isFromCurrentUser = item.from._id === currentUserId;
+              const isToCurrentUser = item.to._id === currentUserId;
 
                   return (
-                    <tr key={index}>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        <div className="flex items-center space-x-2">
-                          <Avatar
-                            seed={item.from.avatarSeed || item.from.email}
-                            name={item.from.name || item.from.email}
-                            size="sm"
-                          />
-                          <span>
-                            {item.from.name || item.from.email}
-                            {isFromCurrentUser && <span className="ml-2 text-red-600 font-medium">(You)</span>}
-                          </span>
+                <div
+                  key={index}
+                  className="rounded-lg p-3 transition-all duration-200"
+                  style={{
+                    background: 'linear-gradient(145deg, #ffffff, #f3f4f6)',
+                    boxShadow: '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff',
+                    border: '1px solid rgba(134, 140, 143, 0.15)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff';
+                  }}
+                >
+                  <div className="flex items-center gap-2">
+                    {/* From User */}
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Avatar
+                        seed={item.from.avatarSeed || item.from.email}
+                        name={item.from.name || item.from.email}
+                        size="sm"
+                      />
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {item.from.name || item.from.email}
+                          {isFromCurrentUser && <span className="ml-1 text-xs text-red-600 font-medium">(You)</span>}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Arrow with Amount Above */}
+                    <div className="flex-shrink-0 flex flex-col items-center justify-end mx-2 relative">
+                      {/* Amount above arrow base - shifted left slightly */}
+                      <div className="mb-0.5 -ml-1">
+                        <div className="px-2 py-1 rounded-lg inline-block" style={{
+                          background: 'linear-gradient(145deg, #e5e7eb, #d1d5db)',
+                          boxShadow: 'inset 2px 2px 4px #868C8F, inset -2px -2px 4px #ffffff',
+                        }}>
+                          <p className="text-sm font-bold text-gray-800 whitespace-nowrap">
+                            {formatCurrency(item.amount)}
+                          </p>
                         </div>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
-                        <div className="flex items-center space-x-2">
-                          <Avatar
-                            seed={item.to.avatarSeed || item.to.email}
-                            name={item.to.name || item.to.email}
-                            size="sm"
-                          />
-                          <span>
-                            {item.to.name || item.to.email}
-                            {isToCurrentUser && <span className="ml-2 text-green-600 font-medium">(You)</span>}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-right font-medium text-gray-900">
-                        {formatCurrency(item.amount)}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                      </div>
+                      {/* Longer Arrow Icon */}
+                      <svg 
+                        viewBox="0 0 120 24" 
+                        className="text-gray-600"
+                        style={{ width: '120px', height: '24px' }}
+                      >
+                        <path 
+                          d="M2 12H108M108 12L98 4M108 12L98 20" 
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          fill="none"
+                        />
+                      </svg>
+                    </div>
+
+                    {/* To User */}
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Avatar
+                        seed={item.to.avatarSeed || item.to.email}
+                        name={item.to.name || item.to.email}
+                        size="sm"
+                      />
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">
+                          {item.to.name || item.to.email}
+                          {isToCurrentUser && <span className="ml-1 text-xs text-green-600 font-medium">(You)</span>}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
@@ -220,13 +250,17 @@ const BalanceSummary = ({ groupId, refreshTrigger }) => {
       {balanceData.settlements && balanceData.settlements.length > 0 && (
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-3">
-            Settlement Suggestions (Minimize Transactions)
+            Settlement Suggestions
           </h3>
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <p className="text-sm text-gray-700 mb-3">
+          <div className="rounded-lg p-4 mb-2" style={{
+            background: 'linear-gradient(145deg, #f3f4f6, #e5e7eb)',
+            boxShadow: '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff',
+            border: '1px solid rgba(134, 140, 143, 0.2)'
+          }}>
+            <p className="text-sm text-gray-600 mb-4 font-medium">
               To settle all balances with the minimum number of transactions:
             </p>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {balanceData.settlements.map((settlement, index) => {
                 const isFromCurrentUser = settlement.from._id === currentUserId;
                 const isToCurrentUser = settlement.to._id === currentUserId;
@@ -234,34 +268,71 @@ const BalanceSummary = ({ groupId, refreshTrigger }) => {
                 return (
                   <div
                     key={index}
-                    className="bg-white rounded-md p-3 border border-green-300"
+                    className="rounded-lg p-3 flex items-center gap-2 relative"
+                    style={{
+                      background: 'linear-gradient(145deg, #ffffff, #f3f4f6)',
+                      boxShadow: '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff',
+                      border: '1px solid rgba(134, 140, 143, 0.15)'
+                    }}
                   >
-                    <div className="flex items-center space-x-2">
+                    {/* From User */}
+                    <div className="flex items-center gap-2 min-w-0">
                       <Avatar
                         seed={settlement.from.avatarSeed || settlement.from.email}
                         name={settlement.from.name || settlement.from.email}
                         size="sm"
                       />
-                      <p className="text-sm font-medium text-gray-900 flex-1">
-                        <span className={isFromCurrentUser ? 'text-red-600 font-semibold' : ''}>
+                      <div className="min-w-0">
+                        <p className={`text-sm font-medium truncate ${isFromCurrentUser ? 'text-gray-800 font-semibold' : 'text-gray-900'}`}>
                           {settlement.from.name || settlement.from.email}
-                          {isFromCurrentUser && ' (You)'}
-                        </span>
-                        {' should pay '}
-                        <span className="font-bold text-green-600">
-                          {formatCurrency(settlement.amount)}
-                        </span>
-                        {' to '}
-                      </p>
+                          {isFromCurrentUser && <span className="ml-1 text-xs text-red-600 font-medium">(You)</span>}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Arrow with Amount Above */}
+                    <div className="flex-shrink-0 flex flex-col items-center justify-end mx-2 relative">
+                      {/* Amount above arrow base - shifted left slightly */}
+                      <div className="mb-0.5 -ml-1">
+                        <div className="px-2 py-1 rounded-lg inline-block" style={{
+                          background: 'linear-gradient(145deg, #e5e7eb, #d1d5db)',
+                          boxShadow: 'inset 2px 2px 4px #868C8F, inset -2px -2px 4px #ffffff',
+                        }}>
+                          <p className="text-sm font-bold text-gray-800 whitespace-nowrap">
+                            {formatCurrency(settlement.amount)}
+                          </p>
+                        </div>
+                      </div>
+                      {/* Longer Arrow Icon */}
+                      <svg 
+                        viewBox="0 0 120 24" 
+                        className="text-gray-600"
+                        style={{ width: '120px', height: '24px' }}
+                      >
+                        <path 
+                          d="M2 12H108M108 12L98 4M108 12L98 20" 
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          fill="none"
+                        />
+                      </svg>
+                    </div>
+
+                    {/* To User */}
+                    <div className="flex items-center gap-2 min-w-0">
                       <Avatar
                         seed={settlement.to.avatarSeed || settlement.to.email}
                         name={settlement.to.name || settlement.to.email}
                         size="sm"
                       />
-                      <span className={isToCurrentUser ? 'text-green-600 font-semibold' : 'text-sm font-medium text-gray-900'}>
-                        {settlement.to.name || settlement.to.email}
-                        {isToCurrentUser && ' (You)'}
-                      </span>
+                      <div className="min-w-0">
+                        <p className={`text-sm font-medium truncate ${isToCurrentUser ? 'text-gray-800 font-semibold' : 'text-gray-900'}`}>
+                          {settlement.to.name || settlement.to.email}
+                          {isToCurrentUser && <span className="ml-1 text-xs text-green-600 font-medium">(You)</span>}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 );
@@ -272,9 +343,13 @@ const BalanceSummary = ({ groupId, refreshTrigger }) => {
       )}
 
       {/* Total Spent */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <div className="rounded-lg p-4" style={{
+        background: 'linear-gradient(145deg, #f3f4f6, #e5e7eb)',
+        boxShadow: '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff',
+        border: '1px solid rgba(134, 140, 143, 0.2)'
+      }}>
         <p className="text-sm font-medium text-gray-700">
-          Total Spent in Group: <span className="font-bold text-blue-600">{formatCurrency(balanceData.totalSpent)}</span>
+          Total Spent in Group: <span className="font-bold text-gray-900">{formatCurrency(balanceData.totalSpent)}</span>
         </p>
       </div>
     </div>

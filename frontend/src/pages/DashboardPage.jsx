@@ -137,9 +137,9 @@ const DashboardPage = () => {
               <h2 className="text-2xl font-semibold text-gray-800">Your Groups</h2>
               <button
                 onClick={() => setIsCreateModalOpen(true)}
-                className="px-5 py-2.5 text-white font-medium transition-all duration-300"
+                className="px-5 py-2.5 text-white font-medium transition-all duration-300 hover:opacity-90"
                 style={{
-                  background: '#1f2937',
+                  background: '#4b5563',
                   borderRadius: '8px',
                   boxShadow: 'none',
                 }}

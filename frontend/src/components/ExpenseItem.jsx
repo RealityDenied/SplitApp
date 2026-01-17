@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import { Pencil } from 'lucide-react';
 import Avatar from './Avatar';
 
 const ExpenseItem = ({ expense, onEdit, onDelete, currentUserId }) => {
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setShowDetails] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
 
   const canEdit = true; // All group members can edit/delete expenses (or restrict if needed)
@@ -36,7 +37,20 @@ const ExpenseItem = ({ expense, onEdit, onDelete, currentUserId }) => {
   const isCurrentUserPayer = payerId === currentUserId;
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+    <div 
+      className="rounded-lg p-4 transition-all duration-200"
+      style={{
+        background: 'linear-gradient(145deg, #ffffff, #f3f4f6)',
+        boxShadow: '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff',
+        border: '1px solid rgba(134, 140, 143, 0.15)'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.boxShadow = '8px 8px 16px #d1d5db, -8px -8px 16px #ffffff';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow = '6px 6px 12px #d1d5db, -6px -6px 12px #ffffff';
+      }}
+    >
       <div className="flex justify-between items-start">
         <div className="flex-1">
           <div className="flex items-center space-x-3 mb-2">
@@ -65,21 +79,28 @@ const ExpenseItem = ({ expense, onEdit, onDelete, currentUserId }) => {
           </div>
 
           {showDetails && (
-            <div className="mt-3 pt-3 border-t border-gray-200">
-              <h4 className="text-sm font-semibold text-gray-700 mb-2">Split Details:</h4>
-              <div className="space-y-1">
+            <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(134, 140, 143, 0.2)' }}>
+              <h4 className="text-sm font-semibold text-gray-700 mb-3">Split Details:</h4>
+              <div className="space-y-2">
                 {expense.splits.map((split, index) => {
                   const participantId = split.participant._id || split.participant;
                   const participantName = split.participant.name || split.participant.email || 'Unknown';
                   const splitAmount = split.amount || 0;
 
                   return (
-                    <div key={index} className="flex justify-between text-sm">
-                      <span className="text-gray-600">
+                    <div 
+                      key={index} 
+                      className="flex justify-between items-center text-sm px-3 py-2 rounded-lg"
+                      style={{
+                        background: 'linear-gradient(145deg, #f9fafb, #f3f4f6)',
+                        boxShadow: 'inset 2px 2px 4px #d1d5db, inset -2px -2px 4px #ffffff',
+                      }}
+                    >
+                      <span className="text-gray-700 font-medium">
                         {participantName}
-                        {split.percentage && ` (${split.percentage.toFixed(2)}%)`}
+                        {split.percentage && <span className="ml-2 text-xs text-gray-500">({split.percentage.toFixed(2)}%)</span>}
                       </span>
-                      <span className="font-medium text-gray-900">{formatCurrency(splitAmount)}</span>
+                      <span className="font-bold text-gray-900">{formatCurrency(splitAmount)}</span>
                     </div>
                   );
                 })}
@@ -98,21 +119,23 @@ const ExpenseItem = ({ expense, onEdit, onDelete, currentUserId }) => {
           {canEdit && onEdit && (
             <button
               onClick={() => onEdit(expense)}
-              className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              className="p-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+              title="Edit"
             >
-              Edit
+              <Pencil size={18} />
             </button>
           )}
           {canEdit && onDelete && (
             <button
               onClick={handleDelete}
-              className={`px-3 py-1 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
-                deleteConfirm
-                  ? 'bg-red-700 text-white hover:bg-red-800 focus:ring-red-500'
-                  : 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500'
-              }`}
+              className="p-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+              title={deleteConfirm ? 'Confirm Delete' : 'Delete'}
             >
-              {deleteConfirm ? 'Confirm' : 'Delete'}
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                <path d="M3 6h18"/>
+                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              </svg>
             </button>
           )}
         </div>

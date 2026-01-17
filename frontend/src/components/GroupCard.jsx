@@ -126,14 +126,15 @@ const GroupCard = ({ group }) => {
         className="absolute right-0 top-0 bottom-0 w-20 flex items-center justify-center transition-all duration-200 z-10 bg-transparent"
       >
         <svg 
-          className="text-gray-600" 
+          className="text-gray-500" 
           fill="none" 
           stroke="currentColor" 
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
           style={{ 
             width: `${cardHeight * 0.6}px`, 
-            height: `${cardHeight * 0.6}px`
+            height: `${cardHeight * 0.6}px`,
+            color: '#6b7280'
           }}
         >
           <path 
