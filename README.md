@@ -2,7 +2,7 @@
 
 A full-stack MERN application for managing group expenses and splitting bills efficiently.
 
-Deployed Link - https://splitapp-frontend.onrender.com/
+Deployed Link - https://split-app-kappa.vercel.app/
 ## Features
 
 -  **Authentication** - JWT-based user authentication
