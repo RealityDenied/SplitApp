@@ -2,16 +2,17 @@
 
 A full-stack MERN application for managing group expenses and splitting bills efficiently.
 
+Deployed Link - https://splitapp-frontend.onrender.com/
 ## Features
 
-- ✅ **Authentication** - JWT-based user authentication
-- ✅ **Groups Management** - Create and manage expense groups (max 4 members)
-- ✅ **Participants Management** - Add/remove participants with validation
-- ✅ **Expense Tracking** - Add, edit, and delete expenses with multiple split modes
-- ✅ **Balance Engine** - Automatic balance calculations and settlement suggestions
-- ✅ **Dashboard Visualizations** - Summary cards showing total spent, owed, and owed to you
-- ✅ **Search & Filters** - Search expenses by text, filter by participant, date range, and amount
-- ✅ **UI Polish** - Loading states, empty states, error handling, and smooth animations
+-  **Authentication** - JWT-based user authentication
+-  **Groups Management** - Create and manage expense groups (max 4 members)
+-  **Participants Management** - Add/remove participants with validation
+-  **Expense Tracking** - Add, edit, and delete expenses with multiple split modes
+-  **Balance Engine** - Automatic balance calculations and settlement suggestions
+-  **Dashboard Visualizations** - Summary cards showing total spent, owed, and owed to you
+-  **Search & Filters** - Search expenses by text, filter by participant, date range, and amount
+-  **UI Polish** - Loading states, empty states, error handling, and smooth animations
 
 ## Tech Stack
 
@@ -132,25 +133,6 @@ SplitMint/
 1. **Equal Split** - Divide expense equally among selected participants
 2. **Custom Amount** - Specify exact amount per participant
 3. **Percentage** - Split by percentage (must sum to 100%)
-
-## Deployment
-
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions to Render.
-
-Quick setup:
-1. Set up MongoDB Atlas
-2. Create a Render Web Service
-3. Set environment variables (see [ENV_SETUP.md](./ENV_SETUP.md))
-4. Deploy!
-
-The app is configured to:
-- Build frontend automatically during deployment
-- Serve both backend API and frontend from the same domain
-- Handle routing for React Router
-
-## Environment Variables
-
-See [ENV_SETUP.md](./ENV_SETUP.md) for environment variable configuration.
 
 ## License
 
