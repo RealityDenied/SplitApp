@@ -23,15 +23,9 @@ const ExpenseItem = ({ expense, onEdit, onDelete, currentUserId }) => {
     });
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (deleteConfirm) {
-      try {
-        await onDelete(expense._id);
-        setDeleteConfirm(false);
-      } catch (error) {
-        // Error will be handled by parent component
-        setDeleteConfirm(false);
-      }
+      onDelete(expense._id);
     } else {
       setDeleteConfirm(true);
       // Auto-cancel confirmation after 3 seconds
