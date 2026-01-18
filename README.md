@@ -3,6 +3,50 @@
 A full-stack MERN application for managing group expenses and splitting bills efficiently.
 
 Deployed Link - https://split-app-kappa.vercel.app/
+
+<table align="center" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+      <img src="https://github.com/user-attachments/assets/ff79ce28-741d-4076-b9d1-af234a8e6f5b" width="260">
+    </td>
+    <td rowspan="2">
+      <img src="https://github.com/user-attachments/assets/d8cf698a-e561-42e5-bc5a-304178c5b75d" width="520">
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <img src="https://github.com/user-attachments/assets/31b14c1f-5c3d-4e5a-8601-91784785cf1d" width="260">
+    </td>
+    <td>
+      <img src="https://github.com/user-attachments/assets/ee619590-a999-476a-b97f-168b310df517" width="260">
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="2">
+      <img src="https://github.com/user-attachments/assets/19a6d706-6882-48eb-ac43-d73c48184559" width="520">
+    </td>
+    <td>
+      <img src="https://github.com/user-attachments/assets/56bafd5b-5f67-4673-8a15-42b5cd3fc0d3" width="260">
+    </td>
+  </tr>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Features
 
 -  **Authentication** - JWT-based user authentication
