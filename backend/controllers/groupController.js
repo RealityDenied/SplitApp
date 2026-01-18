@@ -1,6 +1,10 @@
 import Group from '../models/Group.js';
 import Expense from '../models/Expense.js';
 import { validationResult } from 'express-validator';
+import {
+  calculateEqualSplits,
+  calculatePercentageSplits,
+} from '../utils/expenseCalculator.js';
 
 // @desc    Get all groups for the logged-in user
 // @route   GET /api/groups
@@ -134,7 +138,7 @@ export const updateGroup = async (req, res) => {
       });
     }
 
-    // If updating participants, check if any removed participant has expenses
+    // If updating participants, cascade expenses for removed participants
     if (participants !== undefined) {
       const currentParticipantIds = group.participants.map(p => p.user.toString());
       const newParticipantIds = participants
@@ -146,10 +150,23 @@ export const updateGroup = async (req, res) => {
         id => !newParticipantIds.includes(id)
       );
 
-      // Check if any removed participant has expenses
+      // Cascade expenses for removed participants
       if (removedParticipantIds.length > 0) {
+        // Get all remaining user IDs (creator + remaining participants)
+        const remainingUserIds = [group.creator.toString(), ...newParticipantIds];
+        
+        // Find a replacement user (prefer creator, then first participant)
+        const replacementUserId = group.creator.toString() || (newParticipantIds.length > 0 ? newParticipantIds[0] : null);
+        
+        if (!replacementUserId || remainingUserIds.length === 0) {
+          return res.status(400).json({
+            message: 'Cannot remove participant: at least one member must remain in the group.',
+          });
+        }
+
         for (const removedId of removedParticipantIds) {
-          const hasExpenses = await Expense.findOne({
+          // Find all expenses where removed participant is involved
+          const affectedExpenses = await Expense.find({
             group: group._id,
             $or: [
               { payer: removedId },
@@ -157,10 +174,98 @@ export const updateGroup = async (req, res) => {
             ]
           });
 
-          if (hasExpenses) {
-            return res.status(400).json({
-              message: 'Cannot remove participant who has expenses in this group. Please delete their expenses first.',
-            });
+          // Update each affected expense
+          for (const expense of affectedExpenses) {
+            // Remove participant from splits
+            const remainingSplits = expense.splits.filter(
+              split => split.participant.toString() !== removedId
+            );
+
+            // If no one left to split with, delete the expense
+            if (remainingSplits.length === 0) {
+              await Expense.findByIdAndDelete(expense._id);
+              continue;
+            }
+
+            // If removed participant was the payer, reassign to replacement
+            if (expense.payer.toString() === removedId) {
+              expense.payer = replacementUserId;
+            }
+
+            // Recalculate splits based on split mode
+            if (expense.splitMode === 'equal') {
+              // Recalculate equal splits among remaining participants
+              const remainingParticipantIds = remainingSplits.map(s => s.participant.toString());
+              expense.splits = calculateEqualSplits(expense.amount, remainingParticipantIds);
+            } else if (expense.splitMode === 'custom') {
+              // Redistribute removed participant's amount equally among remaining participants
+              const removedSplit = expense.splits.find(
+                split => split.participant.toString() === removedId
+              );
+              
+              if (removedSplit) {
+                const removedAmount = removedSplit.amount || 0;
+                const redistributionPerPerson = removedAmount / remainingSplits.length;
+                
+                expense.splits = remainingSplits.map(split => ({
+                  participant: split.participant,
+                  amount: (split.amount || 0) + redistributionPerPerson,
+                }));
+              } else {
+                expense.splits = remainingSplits.map(s => ({
+                  participant: s.participant,
+                  amount: s.amount,
+                }));
+              }
+            } else if (expense.splitMode === 'percentage') {
+              // Remove their percentage and recalculate percentages for remaining participants
+              const removedSplit = expense.splits.find(
+                split => split.participant.toString() === removedId
+              );
+              
+              if (removedSplit) {
+                const removedPercentage = removedSplit.percentage || 0;
+                const remainingPercentage = 100 - removedPercentage;
+                
+                // Redistribute the removed percentage proportionally among remaining participants
+                const remainingTotalPercentage = remainingSplits.reduce(
+                  (sum, s) => sum + (s.percentage || 0), 
+                  0
+                );
+                
+                // Calculate new percentages - redistribute proportionally
+                let updatedPercentageSplits;
+                if (remainingTotalPercentage > 0 && remainingTotalPercentage <= 100) {
+                  // Redistribute proportionally based on their current percentage share
+                  updatedPercentageSplits = remainingSplits.map(split => {
+                    const oldPercentage = split.percentage || 0;
+                    // Scale up each percentage to use the full 100%
+                    const newPercentage = (oldPercentage / remainingTotalPercentage) * 100;
+                    
+                    return {
+                      participant: split.participant,
+                      percentage: newPercentage,
+                    };
+                  });
+                } else {
+                  // If percentages don't make sense, distribute equally
+                  updatedPercentageSplits = remainingSplits.map(split => ({
+                    participant: split.participant,
+                    percentage: 100 / remainingSplits.length,
+                  }));
+                }
+                
+                expense.splits = calculatePercentageSplits(expense.amount, updatedPercentageSplits);
+              } else {
+                expense.splits = remainingSplits.map(s => ({
+                  participant: s.participant,
+                  amount: s.amount,
+                  percentage: s.percentage,
+                }));
+              }
+            }
+
+            await expense.save();
           }
         }
       }

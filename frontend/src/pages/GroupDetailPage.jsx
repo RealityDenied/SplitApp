@@ -167,12 +167,17 @@ const GroupDetailPage = () => {
 
   const handleDeleteExpense = async (expenseId) => {
     try {
-      await api.delete(`/expenses/${expenseId}`);
-      fetchExpenses();
-      // Trigger balance refresh
-      setBalanceRefreshTrigger(prev => prev + 1);
+      setError('');
+      const response = await api.delete(`/expenses/${expenseId}`);
+      if (response.status === 200) {
+        fetchExpenses();
+        // Trigger balance refresh
+        setBalanceRefreshTrigger(prev => prev + 1);
+      }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to delete expense');
+      const errorMessage = err.response?.data?.message || err.message || 'Failed to delete expense';
+      setError(errorMessage);
+      console.error('Delete expense error:', err);
     }
   };
 
