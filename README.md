@@ -4,6 +4,12 @@ A full-stack MERN application for managing group expenses and splitting bills ef
 
 Deployed Link - https://split-app-kappa.vercel.app/
 
+### 🔑 Demo Login
+
+**Email:** `vikash@gmail.com`  
+**Password:** `123456`
+
+
 <table align="center" cellspacing="0" cellpadding="0">
   <tr>
     <td>
